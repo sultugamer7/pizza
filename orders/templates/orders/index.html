@@ -1,0 +1,189 @@
+<!-- Extend base.html file -->
+{% extends "orders/base.html" %}
+
+<!-- Title -->
+{% block title %}
+    Home
+{% endblock %}
+
+<!-- Body -->
+{% block main %}
+{% if messages %}
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            {% for message in messages %}
+                <div class="alert alert-warning {% if message.tags %}alert-{{ message.tags }}{% endif %} popup" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-lg-6">
+
+        <!-- Pizzas -->
+        <div class="jumbotron menu">
+            <h3>Pizzas</h3>
+            <label style="font-size: 15px; -webkit-text-fill-color: orangered;">Special Pizza's toppings:<br>{{ special }}</label>
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Small</th>
+                    <th>Large</th>
+                </thead>
+                <tbody>
+                    {% for item in pizzas %}
+                    <tr>
+                        <td class="td1">{{ item.name }}</td>
+                        <td>
+                            ${{ item.small_price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_item('{{ item.name }}', '{{ item.small_price }}', 'Small');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                        <td>
+                            ${{ item.large_price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_item('{{ item.name }}', '{{ item.large_price }}', 'Large');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- The Modal for adding items -->
+        <div class="modal fade" id="add_items_modal">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form action="{% url 'add_item' %}" method="POST">
+                            {% csrf_token %}
+                            <div id="contents"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Salads -->
+        <div class="jumbotron menu">
+            <h3>Salads</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Price</th>
+                </thead>
+                <tbody>
+                    {% for item in salads %}
+                    <tr>
+                        <td class="td1">{{ item.name }}</td>
+                        <td>
+                            {{ item.price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_item('{{ item.name }}', '{{ item.price }}', '');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pasta -->
+        <div class="jumbotron menu">
+            <h3>Pasta</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Price</th>
+                </thead>
+                <tbody>
+                    {% for item in pastas %}
+                    <tr>
+                        <td class="td1">{{ item.name }}</td>
+                        <td>
+                            {{ item.price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_item('{{ item.name }}', '{{ item.price }}', '');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="col-lg-6">
+
+        <!-- Dinner Platters -->
+        <div class="jumbotron menu">
+            <h3>Dinner Platters</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Small</th>
+                    <th>Large</th>
+                </thead>
+                <tbody>
+                    {% for item in dinner_platters %}
+                    <tr>
+                        <td class="td1">{{ item.name }}</td>
+                        <td>
+                            ${{ item.small_price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_item('{{ item.name }}', '{{ item.small_price }}', 'Small');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                        <td>
+                            ${{ item.large_price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_item('{{ item.name }}', '{{ item.large_price }}', 'Large');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Subs -->
+        <div class="jumbotron menu">
+            <h3>Subs</h3>
+            <table class="table table-striped">
+                <thead class="thead-primary">
+                    <th>Name</th>
+                    <th>Small</th>
+                    <th>Large</th>
+                </thead>
+                <tbody>
+                    {% for item in subs %}
+                    <tr>
+                        <td class="td1">{{ item.name }}</td>
+                        <td>
+                            {% if item.name != "Sausage, Peppers & Onions" %}
+                                {{ item.small_price }}
+                                <button type="button" class="btn btn-sm btn-link" onclick="add_sub('{{ item.name }}', '{{ item.small_price }}', 'Small');">
+                                    <img src="static/orders/cart.png" class="cart" title="Add Item">
+                                </button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ item.large_price }}
+                            <button type="button" class="btn btn-sm btn-link" onclick="add_sub('{{ item.name }}', '{{ item.large_price }}', 'Large');">
+                                <img src="static/orders/cart.png" class="cart" title="Add Item">
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

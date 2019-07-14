@@ -1,0 +1,36 @@
+<!-- Extend base.html file -->
+{% extends "orders/base.html" %}
+
+<!-- Title -->
+{% block title %}
+    Log In
+{% endblock%}
+
+<!-- Body -->
+{% block main %}
+
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="jumbotron jumbotron1">
+                {% if message %}
+                    <div class = "alert alert-danger">{{ message }}</div>
+                {% endif %}
+                <form action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    <!-- Username -->
+                    <div class="form-group">
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autocomplete="off" autofocus>
+                    </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <!-- Log In button -->
+                    <button type="submit" class="btn btn-outline-primary">Log In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

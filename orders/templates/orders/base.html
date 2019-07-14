@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Bootstrap's CSS & Responsive meta tag -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <!-- Custom CSS, JS, and Icon -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'orders/styles.css' %}">
+        <script src="{% static 'orders/script.js' %}"></script>
+        <!-- https://favicon.io/emoji-favicons/pizza/ -->
+        <link href="{% static 'orders/favicon.ico' %}" rel="icon">
+        
+        <!-- Title -->
+        <title>Pizza: {% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <nav class="navbar navbar-expand-md navbar-dark">
+                    <a class="navbar-brand" href="/"><strong>Pinocchio's Pizza</strong></a>
+                    <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbar">
+                        {% if request.user.is_authenticated %}
+                            <ul class="navbar-nav ml-auto mt-2">
+                                {%if request.user.is_superuser %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'show_order' %}">Orders</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'cart' %}">Cart ({{ count }})</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                                </li>
+                            </ul>
+                        {% else %}
+                            <ul class="navbar-nav ml-auto mt-2">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </nav>
+
+                <main class="container p-5">
+                    {% block main %}{% endblock %}
+                </main>
+
+            </div>
+
+            <footer id="footer">
+                <label style="padding: 15px;">Developed with ❤️ by Sultan Kazi.</label>
+            </footer>
+
+        </div>
+
+        <script>
+            function add_item(item_name, item_price, item_size) {
+                modal = document.querySelector("#contents");
+                // Hidden form fields to pass value
+                modal.innerHTML = `
+                    <input type="hidden" name="name" id="name" value="${item_name}">
+                    <input type="hidden" name="item_price" id="item_price" value="${item_price}">
+                    <input type="hidden" name="size" id="size" value="${item_size}">
+                `;
+                // Special pizza's toppings
+                if (item_name == "Regular Special Pizza" || item_name == "Sicilian Special Pizza") {
+                    modal.innerHTML += `
+                        <input type="hidden" name="special" id="special" value="{{ special }}">
+                    `;
+                }
+                // Item name
+                modal.innerHTML += `
+                    <label style="font-weight: 500;">${item_name}</label>`;
+                if (item_size != "") {
+                    modal.innerHTML += ` <label style="font-weight: 500;"> (${item_size}) </label>`;
+                }
+                modal.innerHTML += `<br><label style="font-weight: 500;"> - $${item_price}</label>`;
+                // Adding toppings (extras)
+                if (item_name == "Regular 1 topping Pizza" || item_name == "Sicilian 1 item Pizza") {
+                    modal.innerHTML += `
+                    <hr>
+                    <label style="font-size: 14.5px; font-weight: 500;">Toppings:</label>
+                    <div class="form-group">
+                        <select class="form-control form-control-sm" name="extra1" id="extra1">
+                            {% for topping in toppings %}
+                            <option value="{{ topping.name }}">{{ topping.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    `;
+                }
+                else if (item_name == "Regular 2 toppings Pizza" || item_name == "Sicilian 2 items Pizza") {
+                    modal.innerHTML += `
+                    <hr>
+                    <label style="font-size: 14.5px; font-weight: 500;">Toppings:</label>
+                    {% for i in "12" %}
+                        <div class="form-group">
+                            <select class="form-control form-control-sm" name="extra{{i}}" id="extra{{i}}">
+                                {% for topping in toppings %}
+                                <option value="{{ topping.name }}">{{ topping.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
+                    `;
+                }
+                else if (item_name == "Regular 3 toppings Pizza" || item_name == "Sicilian 3 items Pizza") {
+                    modal.innerHTML += `
+                    <hr>
+                    <label style="font-size: 14.5px; font-weight: 500;">Toppings:</label>
+                    {% for i in "123" %}
+                        <div class="form-group">
+                            <select class="form-control form-control-sm" name="extra{{i}}" id="extra{{i}}">
+                                {% for topping in toppings %}
+                                <option value="{{ topping.name }}">{{ topping.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
+                    `;
+                }
+                // Submit button
+                modal.innerHTML += `
+                    <hr>
+                    <button type="submit" class="btn btn-sm btn-link">
+                        <img src="static/orders/cart.png" class="cart3" title="Add Item">
+                    </button>
+                `;
+                $("#add_items_modal").modal('show');
+            }
+
+            function add_sub(item_name, item_price, item_size) {
+                modal = document.querySelector("#contents");
+                // Hidden form fields to pass value
+                modal.innerHTML = `
+                    <input type="hidden" name="name" id="name" value="${item_name}">
+                    <input type="hidden" name="item_price" id="item_price" value="${item_price}">
+                    <input type="hidden" name="size" id="size" value="${item_size}">
+                `;
+                // Item name
+                modal.innerHTML += `
+                    <label style="font-weight: 500;">${item_name}</label>`;
+                if (item_size != "") {
+                    modal.innerHTML += ` <label style="font-weight: 500;"> (${item_size}) </label>`;
+                }
+                modal.innerHTML += `<br><label style="font-weight: 500;"> - $${item_price}</label>
+                <hr>
+                <div class="container row" style="text-align: left;">
+                    <label style="font-size: 14.7px; font-weight: 500;">Extras:</label>
+                </div>
+                `;
+                // Adding extras (for subs)
+                if (item_name == "Steak") {
+                    modal.innerHTML += `
+                    {% for extra in extras %}
+                        {% if extra.name != "Cheese" %}
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="hidden" name="price{{ extra.id }}" id="price{{ extra.id }}" value="0.00">
+                                <input type="checkbox" class="form-check-input" value="{{ extra.name }}" name="extra{{ extra.id }}" id="extra{{ extra.id }}" onclick="change_price('{{ extra.price }}', 'price{{ extra.id }}')">
+                                {{ extra.name }} - $ {{ extra.price }}
+                            </label>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    `;
+                }
+                modal.innerHTML += `
+                {% for extra in extras %}
+                    {% if extra.name == "Cheese" %}
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="hidden" name="price{{ extra.id }}" id="price{{ extra.id }}" value="0.00">
+                            <input type="checkbox" class="form-check-input" value="{{ extra.name }}" name="extra{{ extra.id }}" id="extra{{ extra.id }}" onclick="change_price('{{ extra.price }}', 'price{{ extra.id }}')">
+                            {{ extra.name }} - $<label>{{ extra.price }}</label>
+                        </label>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <hr style="margin: 8px;">
+                <strong style="font-size: 18px;">Total: $<span id="total">${item_price}</span></strong>
+                `;
+                // Submit button
+                modal.innerHTML += `
+                    <hr style="margin: 8px;">
+                    <button type="submit" class="btn btn-sm btn-link">
+                        <img src="static/orders/cart.png" class="cart3" title="Add Item">
+                    </button>
+                `;
+                $("#add_items_modal").modal('show');
+            }
+        </script>
+        <!-- Bootstrap's JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>

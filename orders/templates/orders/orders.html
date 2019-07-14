@@ -1,0 +1,94 @@
+<!-- Extend base.html file -->
+{% extends "orders/base.html" %}
+
+<!-- Title -->
+{% block title %}
+    Home
+{% endblock %}
+
+<!-- Body -->
+{% block main %}
+
+<div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
+        <div class="jumbotron menu">
+            <h3>Orders</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>Order ID</th>
+                    <th>Ordered by</th>
+                    <th>Ordered on</th>
+                    <th>Total amount</th>
+                    <th>Order status</th>
+                    <th>View order</th>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.user }}</td>
+                            <td>{{ order.date }}</td>
+                            <td>${{ order.order_total }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-link" data-toggle="modal" data-target="#{{ order.id }}">
+                                    <img src="static/orders/view_order.png" class="cart2" title="View Order">
+                                </button>
+                            </td>
+                        </tr>
+                            
+                        <!-- The Modal -->
+                        <div class="modal" id="{{ order.id }}">
+                            <div class="modal-dialog">
+                                <div class="modal-content order-modal1">
+                            
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                    <h4 class="modal-title">Ordered items...</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                            
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        {% for item in cart %}
+                                            {% if item.order_id == order.id %}
+                                                <div class="row">
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-8">
+                                                        <label>
+                                                            {{ item.cart_item }}:
+                                                            {% if item.extras != "" %}
+                                                            <br><sup>({{ item.extras }})</sup>
+                                                            {% endif %}
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <strong>${{ item.item_price }}</strong>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <hr style="background-color: aliceblue;">
+                                        <div class="row">
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-8">
+                                                <strong>Order total:</strong>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <strong>${{ order.order_total }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

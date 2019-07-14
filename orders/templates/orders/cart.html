@@ -1,0 +1,139 @@
+<!-- Extend base.html file -->
+{% extends "orders/base.html" %}
+
+<!-- Title -->
+{% block title %}
+    Home
+{% endblock %}
+
+<!-- Body -->
+{% block main %}
+{% if messages %}
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            {% for message in messages %}
+                <div class="alert alert-warning {% if message.tags %}alert-{{ message.tags }}{% endif %} popup" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+<div class="row">
+    <!-- Cart -->
+    {% if count == 0 %}
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div class="jumbotron item_list">
+            <h3>CART IS EMPTY!</h3>
+            <a href="{% url 'index' %}"><h5>Add items now!</h5></a>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-lg-6">
+        <div class="jumbotron item_list">
+            <h3>Item(s) in cart: {{ count }}</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Remove</th>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                    <tr>
+                        <td>
+                            {{ item.cart_item }}
+                            {% if item.extras != "" %}
+                            <br><sup>({{ item.extras }})</sup>
+                            {% endif %}
+                        </td>
+                        <td>${{ item.item_price }}</td>
+                        <td>
+                            <form action="{% url 'remove_item' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" id="item_id" value="{{ item.id }}">
+                                <input type="hidden" name="item_price" id="item_price" value="{{ item.item_price }}">
+                                <button type="submit" class="btn btn-sm btn-link">
+                                    <img src="static/orders/remove.jpg" class="cart1" title="Remove Item">
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            
+        </div>
+    </div>
+
+    <!-- Place Order -->
+    <div class="col-lg-6">
+        <div class="jumbotron order">
+            <h4><strong>Order total: ${{ order_total }}</strong></h4>
+            <h6>Place your order now!</h6>
+            <br>
+            <!-- Button to Open the Modal -->
+            <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal">
+                Confirm order
+            </button>
+                
+            <!-- The Modal -->
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content order-modal">
+                    
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                        <h4 class="modal-title">Confirm items...</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                    
+                        <!-- Modal body -->
+                        <div class="modal-body" style="text-align: -webkit-auto;">
+                            {% for item in cart %}
+                            <div class="row">
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-8">
+                                    <label>
+                                        {{ forloop.counter }}. {{ item.cart_item }}:
+                                        {% if item.extras != "" %}
+                                            <br><sup>({{ item.extras }})</sup>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <strong>${{ item.item_price }}</strong>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <hr style="background-color: aliceblue;">
+                            <div class="row">
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-8">
+                                    <strong>Order total:</strong>
+                                </div>
+                                <div class="col-lg-3">
+                                    <strong>${{ order_total }}</strong>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    
+                        <!-- Modal footer -->
+                        <div class="modal-footer" style="align-items: center;  display: block;">
+                            <form action="{% url 'place_order' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" id="order_id" value="{{ order_id }}">
+                                <button type="submit" class="btn btn-danger">Place order</button>
+                            </form>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,224 @@
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content-wrap {
+    padding-bottom: 3.5rem;    /* Footer height */
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0,0,0,0.8);
+    color: #ffffff;
+    text-align: center;
+    vertical-align: middle;
+    height: 3.5rem;            /* Footer height */
+}
+
+body {
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.navbar {
+    background-color: rgba(68, 0, 0, 0.62);
+}
+
+.jumbotron1 {
+    padding-top: 12%;
+    padding-bottom: 10%;
+    background-color: rgba(32, 0, 0, 0.78);
+    border-style: outset;
+    border-radius: 3px;
+    border-color: #3d9afe;
+    margin-bottom: 1%;
+    border-width: 1px;
+    width: auto;
+}
+
+.menu {
+    border-radius: 4px;
+    background: rgba(255, 236, 236, 0.85);
+    -webkit-text-fill-color: #495057;
+    border-style: groove;
+    border-width: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-color: #6c757d;
+    padding-top: 25px;
+    padding-bottom: 0px;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+h3 {
+    font-weight: 700;
+}
+
+.cart {
+    max-height: 33px;
+    cursor: pointer;
+}
+
+.cart1 {
+    max-height: 28px;
+    cursor: pointer;
+}
+
+@keyframes move {
+    0% {
+        opacity: 0;
+        height: 0px;
+        line-height: 0px;
+        padding: 0px;
+        margin-bottom: 0px;
+        margin-top: -40px;
+    }
+    10% {
+        opacity: 0;
+        height: 0px;
+        line-height: 0px;
+        padding: 0px;
+        margin-bottom: 0px;
+        margin-top: -40px;
+    }
+    25% {
+        opacity: 1;
+        height: 75%;
+        line-height: 100%;
+        padding: 20px;
+        margin-bottom: 20px;
+        margin-top: 0px;
+    }
+    80% {
+        opacity: 1;
+        height: 75%;
+        line-height: 100%;
+        padding: 20px;
+        margin-bottom: 20px;
+        margin-top: 0px;
+    }
+    100% {
+        opacity: 0;
+        height: 0px;
+        line-height: 0px;
+        padding: 0px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+}
+
+.popup {
+    position: relative;
+    animation-name: move;
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+}
+
+.item_list {
+    border-radius: 4px;
+    background: #421e1ed6;
+    -webkit-text-fill-color: #fffdfd;
+    border-style: groove;
+    border-width: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-color: #7d6c6c;
+    padding-top: 25px;
+    padding-bottom: 0px;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+.order {
+    border-radius: 3px;
+    background-color: #172330a1;
+    border-style: ridge;
+    border-color: #007bff;
+    border-width: 1px;
+    -webkit-text-fill-color: antiquewhite;
+}
+
+.order-modal {
+    background: #3f0006d1;
+    border-style: solid;
+    border-color: #dc3545;
+}
+
+.cart2 {
+    max-height: 33px;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.cart3 {
+    max-height: 50px;
+    cursor: pointer;
+}
+
+.order-modal1 {
+    font-family: sans-serif;
+    font-weight: 400;
+    border-style: solid;
+    border-color: white;
+    border-radius: 4px;
+    background: #382d2dc4;
+    border-width: 2px;
+    -webkit-text-fill-color: #ffa0a0;
+    text-align: -webkit-auto;
+}
+
+sup {
+    font-size: 12px;
+}
+
+hr {
+    margin: 2px;
+}
+
+.form-check {
+    text-align: -webkit-left;
+    font-size: 15px;
+}
+
+.cart:hover {
+    border-style: dotted;
+    border-radius: 16px;
+}
+
+.cart3:hover {
+    border-style: dotted;
+    border-radius: 26px;
+}
+
+.td1 {
+    padding-top: 3.8% !important;
+}

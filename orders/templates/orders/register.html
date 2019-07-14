@@ -1,0 +1,48 @@
+<!-- Extend base.html -->
+{% extends "orders/base.html" %}
+
+<!-- Title -->
+{% block title %}
+    Register
+{% endblock %}
+
+<!-- Body -->
+{% block main %}
+
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                <div class="jumbotron jumbotron1">
+                    {% if message %}
+                        <div class = "alert alert-danger">{{ message }}</div>
+                    {% endif %}
+                    <form action="{% url 'register' %}" method="POST">
+                        {% csrf_token %}
+                        <!-- First Name -->
+                        <div class="form-group">
+                            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name" required autocomplete="off" autofocus>
+                        </div>
+                        <!-- Last Name -->
+                        <div class="form-group">
+                            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last Name" required autocomplete="off">
+                        </div>
+                        <!-- Email -->
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" class="form-control" placeholder="E-Mail Address" required autocomplete="off">
+                        </div>
+                        <!-- Username -->
+                        <div class="form-group">
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autocomplete="off">
+                        </div>
+                        <!-- Password -->
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <!-- Register button -->
+                        <button type="submit" class="btn btn-outline-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+{% endblock%}
